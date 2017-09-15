@@ -1,0 +1,62 @@
+colony: USCAnt // first line specifies the ant's name
+ 
+// This program controls a single ant and causes it to move
+// around the field and do things.
+// This ant moves around randomly, picks up food if it
+// happens to stumble upon it, eats when it gets hungry,
+// and will drop food on its anthill if it happens to 
+// stumble back on its anthill while holding food.
+ 
+// here's the ant's programming instructions, written
+// in our 'Bugs' language
+ 
+start:
+ 	emitPheromone
+ 	moveForward
+	if i_was_blocked_from_moving then goto was_blocked
+	if i_smell_pheromone_in_front_of_me then goto phero_in_front
+	emitPheromone
+ 	if i_am_standing_on_food then goto on_food
+ 	if i_am_hungry then goto eat_food
+ 	
+ 	goto start	// jump back to the "start:" line
+ 
+phero_in_front:
+	if i_am_standing_on_my_anthill then goto on_hill
+	if i_am_standing_on_food then goto on_food
+	moveForward
+	if i_smell_pheromone_in_front_of_me then goto phero_in_front
+	rotateClockwise
+	if i_smell_pheromone_in_front_of_me then goto phero_in_front
+	rotateCounterClockwise
+	rotateCounterClockwise
+	if i_smell_pheromone_in_front_of_me then goto phero_in_front
+	if i_am_standing_on_my_anthill then goto on_hill
+	
+	goto start
+was_blocked:
+	if i_am_standing_on_food then goto on_food
+	rotateClockwise
+	moveForward
+	goto start
+on_food:
+	pickUpFood
+	pickUpFood
+	pickUpFood
+	emitPheromone
+	rotateClockwise
+	rotateClockwise
+	moveForward
+	if i_smell_pheromone_in_front_of_me then goto phero_in_front
+	goto start	// jump back to the "start:" line
+eat_food:
+	eatFood
+	goto start	// jump back to the "start:" line
+
+on_hill:
+	dropFood
+	rotateCounterClockwise
+	rotateCounterClockwise
+	moveForward
+	if i_smell_pheromone_in_front_of_me then goto phero_in_front
+	goto start
